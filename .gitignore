@@ -6,7 +6,9 @@ dist/
 wheels/
 *.egg-info
 
-
+# Model files
+models/
+braille_model/
 # Virtual environments
 .venv
 
