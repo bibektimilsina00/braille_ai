@@ -8,73 +8,23 @@ from PIL import Image
 
 router = APIRouter()
 
-# Load model once at startup
-import os
+import json
 
-# Construct absolute path relative to the app directory
-app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-MODEL_PATH = os.path.join(app_dir, "models", "braille_cnn_best.h5")
+# Load model and class mappings once at startup
+MODEL_PATH = "braille_model/braille_cnn_final.keras"
+CLASS_INDICES_PATH = "braille_model/class_indices.json"
 
-#MODEL_PATH = "../models/braille_cnn_best.h5"  # Comment out the relative path
+model = None
+inv_map = {}
 
 try:
     model = tf.keras.models.load_model(MODEL_PATH)
-    print(f"Model loaded successfully from: {MODEL_PATH}")
+    with open(CLASS_INDICES_PATH, "r") as f:
+        class_indices = json.load(f)
+        # Invert the map for prediction: index -> character
+        inv_map = {v: k for k, v in class_indices.items()}
 except Exception as e:
-    model = None
-    print(f"Failed to load model from {MODEL_PATH}: {e}")
-
-# Class index to Nepali character mapping (update as needed)
-inv_map = {
-    0: "क",
-    1: "ख",
-    2: "ग",
-    3: "घ",
-    4: "ङ",
-    5: "च",
-    6: "छ",
-    7: "ज",
-    8: "झ",
-    9: "ञ",
-    10: "ट",
-    11: "ठ",
-    12: "ड",
-    13: "ढ",
-    14: "ण",
-    15: "त",
-    16: "थ",
-    17: "द",
-    18: "ध",
-    19: "न",
-    20: "प",
-    21: "फ",
-    22: "ब",
-    23: "भ",
-    24: "म",
-    25: "य",
-    26: "र",
-    27: "ल",
-    28: "व",
-    29: "श",
-    30: "ष",
-    31: "स",
-    32: "ह",
-    33: "क्ष",
-    34: "त्र",
-    35: "ज्ञ",
-    36: "अ",
-    37: "आ",
-    38: "इ",
-    39: "ई",
-    40: "उ",
-    41: "ऊ",
-    42: "ऋ",
-    43: "ॠ",
-    44: "ए",
-    45: "ऐ",
-    46: "ओ",
-    47: "औ",
-}
+    print(f"Failed to load model or class indices: {e}")
 
 IMG_SIZE = (100, 100)
 

@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from api.braille import router as braille_router
+
+from .api.braille import router as braille_router
 
 app = FastAPI(title="Braille AI", description="Braille character recognition API")
 
@@ -15,6 +16,7 @@ async def root():
 
 def main():
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
 
 
