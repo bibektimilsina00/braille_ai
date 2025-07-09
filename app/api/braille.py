@@ -82,7 +82,7 @@ IMG_SIZE = (100, 100)
 def preprocess_image(image_bytes):
     image = Image.open(io.BytesIO(image_bytes)).convert("L")
     image = image.resize(IMG_SIZE)
-    arr = np.array(image) / 255.0
+    arr = np.array(image)
     arr = arr.reshape((1, IMG_SIZE[0], IMG_SIZE[1], 1))
     return arr
 
