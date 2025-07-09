@@ -9,12 +9,20 @@ from PIL import Image
 router = APIRouter()
 
 # Load model once at startup
-MODEL_PATH = "braille_model/braille_cnn_model.h5"
+import os
+
+# Construct absolute path relative to the app directory
+app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_PATH = os.path.join(app_dir, "models", "braille_cnn_best.h5")
+
+#MODEL_PATH = "../models/braille_cnn_best.h5"  # Comment out the relative path
+
 try:
     model = tf.keras.models.load_model(MODEL_PATH)
+    print(f"Model loaded successfully from: {MODEL_PATH}")
 except Exception as e:
     model = None
-    print(f"Failed to load model: {e}")
+    print(f"Failed to load model from {MODEL_PATH}: {e}")
 
 # Class index to Nepali character mapping (update as needed)
 inv_map = {
